@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -6,10 +5,8 @@ import 'package:test_mapp/Const/colors.dart';
 import 'package:test_mapp/Const/icons_path.dart';
 import 'package:test_mapp/Controller/Splash/splash_controller.dart';
 
-
 class SplashScreen extends StatelessWidget {
   SplashScreen({super.key});
-
 
   final SplashController controller = Get.put(SplashController());
 
@@ -28,7 +25,7 @@ class SplashScreen extends StatelessWidget {
                 width: Get.width,
                 height: Get.height * .1,
                 child: Obx(
-                      () => Row(
+                  () => Row(
                     children: [
                       AnimatedContainer(
                         height: double.maxFinite,
@@ -77,7 +74,7 @@ class SplashScreen extends StatelessWidget {
                 width: Get.width,
                 height: Get.height * .1,
                 child: Obx(
-                      () => Row(
+                  () => Row(
                     children: [
                       AnimatedContainer(
                         height: double.maxFinite,
@@ -126,7 +123,7 @@ class SplashScreen extends StatelessWidget {
                 width: Get.width,
                 height: Get.height * .1,
                 child: Obx(
-                      () => Row(
+                  () => Row(
                     children: [
                       Expanded(
                         child: AnimatedContainer(
@@ -175,7 +172,7 @@ class SplashScreen extends StatelessWidget {
                 width: Get.width,
                 height: Get.height * .1,
                 child: Obx(
-                      () => Row(
+                  () => Row(
                     children: [
                       Expanded(
                         child: AnimatedContainer(
@@ -183,7 +180,6 @@ class SplashScreen extends StatelessWidget {
                           width: double.maxFinite,
                           duration: const Duration(milliseconds: 500),
                           decoration: BoxDecoration(
-
                             border: Border.all(
                               color: mainColor,
                               width: 1.0,
@@ -225,7 +221,7 @@ class SplashScreen extends StatelessWidget {
                 width: Get.width,
                 height: Get.height * .1,
                 child: Obx(
-                      () => Row(
+                  () => Row(
                     children: [
                       AnimatedContainer(
                         height: double.maxFinite,
@@ -268,13 +264,11 @@ class SplashScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-
             Center(
               child: Lottie.asset(
                 splashAnim,
-                height: Get.height * .15,
-                width: Get.height * .15,
+                height: Get.height * .3,
+                width: Get.height * .3,
               ),
             ),
           ],

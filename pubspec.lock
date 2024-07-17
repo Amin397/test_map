@@ -126,6 +126,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
+  flutter_staggered_animations:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_animations
+      sha256: "81d3c816c9bb0dca9e8a5d5454610e21ffb068aedb2bde49d2f8d04f75538351"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -209,7 +217,7 @@ packages:
     source: hosted
     version: "2.1.1"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
@@ -232,16 +240,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
-  latlng:
-    dependency: "direct main"
-    description:
-      name: latlng
-      sha256: a324c80073ef959d67ead88b57a717b7b87f182da1b980ccae92b3555ac82712
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.7"
   latlong2:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: latlong2
       sha256: "98227922caf49e6056f91b6c56945ea1c7b166f28ffcd5fb8e72fc0b453cc8fe"
