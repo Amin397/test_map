@@ -10,6 +10,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:test_mapp/Const/icons_path.dart';
 import 'package:http/http.dart' as http;
+import 'package:test_mapp/Model/history_model.dart';
+import 'package:test_mapp/Util/storage_utils.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:test_mapp/View/Home/Widgets/enter_coordinate_modal.dart';
 
@@ -60,6 +62,11 @@ class HomeController extends GetxController {
       desiredAccuracy: LocationAccuracy.bestForNavigation,
       forceAndroidLocationManager: true,
     ).then((Position position) async {
+      print('--------------------');
+
+      print(position.latitude);
+      print(position.longitude);
+      print('--------------------');
       cLocation = Marker(
         rotate: true,
         point: LatLng(
@@ -93,7 +100,7 @@ class HomeController extends GetxController {
   }
 
   refreshCurrentLocation() async {
-    refreshLocationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    refreshLocationTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       print('Timer:${timer.tick}');
       Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation,
@@ -115,8 +122,8 @@ class HomeController extends GetxController {
           ),
           child: const SizedBox(),
         );
-        mapController.moveAndRotate(
-            currentMarker!.point, mapController.camera.zoom, 3.0);
+        // mapController.moveAndRotate(
+        //     currentMarker!.point, mapController.camera.zoom, 3.0);
 
         Future.delayed(const Duration(milliseconds: 500), () {
           update(['mapUpdate']);
@@ -129,11 +136,23 @@ class HomeController extends GetxController {
 
   void openCoordinateModal({required BuildContext context}) async {
     refreshLocationTimer!.cancel();
-    showLoadingAlert();
+    latTextController.clear();
+    lngTextController.clear();
+
     routPoints.clear();
     totalDistance = '';
     markerList.clear();
     update(['mapUpdate']);
+
+    List<HistoryModel> historyList = [];
+
+    var s = await StorageUtils.getHistory();
+
+    if (s is String) {
+      historyList = HistoryModel.listFromJson(jsonDecode(s));
+    }
+
+    print('histoory Lentthhhhhhhhhhhhh ${historyList.length}');
 
     var result = await showModalBottomSheet(
       backgroundColor: Colors.transparent,
@@ -141,10 +160,12 @@ class HomeController extends GetxController {
       context: context,
       builder: (BuildContext context) => EnterCoordinateModal(
         controller: this,
+        historyList: historyList,
       ),
     );
 
     if (result is bool) {
+      showLoadingAlert();
       markerList.insert(
         0,
         Marker(
@@ -169,11 +190,11 @@ class HomeController extends GetxController {
       Future.delayed(const Duration(milliseconds: 300), () {
         update(['mapUpdate']);
       });
-      await makeRoutRequest();
+      await makeRoutRequest(fromHistory: false);
     }
   }
 
-  Future<void> makeRoutRequest() async {
+  Future<void> makeRoutRequest({required bool fromHistory}) async {
     Uri url = Uri.parse(
         // 'http://router.project-osrm.org/route/v1/driving/${originLatLng.longitude},${originLatLng.latitude};${destinationLatLng.longitude},${destinationLatLng.latitude}?steps=true&annotations=true&geometries=geojson&overview=full');
         'http://router.project-osrm.org/route/v1/driving/${currentMarker!.point.longitude},${currentMarker!.point.latitude};${markerList.first.point.longitude},${markerList.first.point.latitude}?steps=true&annotations=true&geometries=geojson');
@@ -188,6 +209,9 @@ class HomeController extends GetxController {
     totalDistance =
         jsonDecode(response.body)['routes'][0]['distance'].toString();
 
+    if(!fromHistory){
+      await writeToStorage();
+    }
     String amin = router.first.toString();
 
     amin = amin.replaceAll(']', '').replaceAll('[', '').replaceAll(' ', '');
@@ -207,7 +231,7 @@ class HomeController extends GetxController {
       );
     }
     isDetailShow(true);
-
+    refreshCurrentLocation();
     Get.back();
     Future.delayed(const Duration(seconds: 1), () {
       update(['mapUpdate']);
@@ -231,5 +255,58 @@ class HomeController extends GetxController {
 
   void switchCollapsed() {
     isDetailShow(!isDetailShow.value);
+  }
+
+  Future<void> writeToStorage() async {
+    StorageUtils.getHistory().then((value) async {
+      List<HistoryModel> historyList = [];
+      if (value is String) {
+        historyList = HistoryModel.listFromJson(
+          jsonDecode(value),
+        );
+      }
+
+      historyList.add(
+        HistoryModel(
+          dateTime: DateTime.now(),
+          distance: totalDistance,
+          position: markerList.first.point,
+        ),
+      );
+      await StorageUtils.setHistory(
+        history: jsonEncode(
+          historyList.map((e) => e.toJson()).toList(),
+        ),
+      );
+    });
+  }
+
+  void startHistory({required HistoryModel history}) async{
+
+    showLoadingAlert();
+    markerList.insert(
+      0,
+      Marker(
+        point: history.position,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Image.asset(
+            markerIcon,
+            // height: Get.height * .0,
+            // width: Get.height * .0,
+            fit: BoxFit.cover,
+          ),
+        ),
+        rotate: true,
+      ),
+    );
+
+    mapController.move(markerList.first.point, 9.0);
+    Future.delayed(const Duration(milliseconds: 300), () {
+      update(['mapUpdate']);
+    });
+    await makeRoutRequest(fromHistory:true);
+
+
   }
 }

@@ -21,21 +21,9 @@ class BuildMapWidget extends StatelessWidget {
         builder: (ctx) {
           return FlutterMap(
             options: MapOptions(
-              maxZoom: 19,
-              minZoom: 13,
+              maxZoom: 22,
+              minZoom: 12,
               keepAlive: true,
-              onMapEvent: (e) {
-                // ctx.getCenter(event:e);
-              },
-              onTap: (position, c) async{
-
-
-              },
-              // onPointerUp: (s,c){
-              //   if(!Blocs.rideBloc.inTrip){
-              //     controller.getScootersData();
-              //   }
-              // },
               initialCenter: (ctx.currentMarker is Marker)
                   ? ctx.currentMarker!.point
                   : const LatLng(35.7959, 51.4171),
