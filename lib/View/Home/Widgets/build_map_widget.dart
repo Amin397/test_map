@@ -21,14 +21,18 @@ class BuildMapWidget extends StatelessWidget {
         builder: (ctx) {
           return FlutterMap(
             options: MapOptions(
-              maxZoom: 22,
-              minZoom: 12,
-              keepAlive: true,
-              initialCenter: (ctx.currentMarker is Marker)
-                  ? ctx.currentMarker!.point
-                  : const LatLng(35.7959, 51.4171),
-              initialZoom: 18.0,
-            ),
+                maxZoom: 22,
+                minZoom: 12,
+                keepAlive: true,
+                initialCenter: (ctx.currentMarker is Marker)
+                    ? ctx.currentMarker!.point
+                    : const LatLng(35.7959, 51.4171),
+                initialZoom: 18.0,
+                onTap: (s, position) {
+                  controller.thisPosition(
+                    position: position,
+                  );
+                }),
             mapController: ctx.mapController,
             children: [
               TileLayer(

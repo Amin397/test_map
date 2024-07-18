@@ -44,11 +44,11 @@ class HomeScreen extends StatelessWidget {
               init: controller,
               id: 'mapUpdate',
               builder: (ctx) {
-                if(ctx.routPoints.isEmpty){
+                if (ctx.routPoints.isEmpty) {
                   return const SizedBox();
-                }else{
+                } else {
                   return Obx(
-                        () => AnimatedSwitcher(
+                    () => AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       // Animation duration
                       transitionBuilder: (child, animation) {
@@ -61,40 +61,58 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: (controller.isDetailShow.isTrue)
                           ? BuildDetailWidget(
-                        controller: controller,
-                      )
+                              controller: controller,
+                            )
                           : InkWell(
-                        onTap: () {
-                          controller.switchCollapsed();
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(
-                            top: Get.height * .04,
-                            left: Get.width * .03,
-                            right: Get.width * .03,
-                          ),
-                          width: Get.width,
-                          height: Get.height * .05,
-                          padding: paddingAll8,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: shadow(),
-                            borderRadius: radiusAll4,
-                          ),
-                          child: const Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Show Detail '),
-                              Icon(Icons.arrow_drop_down_outlined),
-                            ],
-                          ),
-                        ),
-                      ),
+                              onTap: () {
+                                controller.switchCollapsed();
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  top: Get.height * .04,
+                                  left: Get.width * .03,
+                                  right: Get.width * .03,
+                                ),
+                                width: Get.width,
+                                height: Get.height * .05,
+                                padding: paddingAll8,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: shadow(),
+                                  borderRadius: radiusAll4,
+                                ),
+                                child: const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Show Detail '),
+                                    Icon(Icons.arrow_drop_down_outlined),
+                                  ],
+                                ),
+                              ),
+                            ),
                     ),
                   );
                 }
               },
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: paddingAll16,
+                child: FloatingActionButton(
+                  backgroundColor: mainColor,
+                  child: Center(
+                    child: Icon(
+                      Icons.location_searching,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    controller.goToCurrentLocation();
+                  },
+                ),
+              ),
             )
           ],
         ),

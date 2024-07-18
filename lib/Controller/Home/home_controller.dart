@@ -309,4 +309,47 @@ class HomeController extends GetxController {
 
 
   }
+
+  void goToCurrentLocation() {
+    mapController.move(currentMarker!.point, 12);
+    update(['mapUpdate']);
+  }
+
+  void thisPosition({required LatLng position})async {
+
+    refreshLocationTimer!.cancel();
+    latTextController.clear();
+    lngTextController.clear();
+
+    routPoints.clear();
+    totalDistance = '';
+    markerList.clear();
+    update(['mapUpdate']);
+
+    showLoadingAlert();
+
+    markerList.insert(
+      0,
+      Marker(
+        point: position,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Image.asset(
+            markerIcon,
+            // height: Get.height * .0,
+            // width: Get.height * .0,
+            fit: BoxFit.cover,
+          ),
+        ),
+        rotate: true,
+      ),
+    );
+
+    mapController.move(markerList.first.point, 9.0);
+    Future.delayed(const Duration(milliseconds: 300), () {
+      update(['mapUpdate']);
+    });
+    await makeRoutRequest(fromHistory:false);
+
+  }
 }
